@@ -70,3 +70,62 @@ function App() {
 
 export default App;
 ```
+
+<br />
+
+### theme
+
+theme은 색상을 객체로 관리 할 수 있는 유용한 함수다. 셋팅을 할 때 index에서 themeProvieder를 설정 후 app컴포넌트에 감싸준다. 그 후 적용하고 싶은 색상 코드를 객체에 담아 주면 된다.
+
+```js
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ThemeProvider } from "styled-components";
+import App from "./App";
+
+const darkTheme = {
+  textColor: "whitesmoke",
+  backgroundColor: "#111",
+};
+
+const lightTheme = {
+  textColor: "#111",
+  backgroundColor: "whitesmoke",
+};
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <ThemeProvider theme={darkTheme}>
+    <App />
+  </ThemeProvider>
+);
+```
+
+셋팅 후 props를 활용해서 색상을 꺼내서 사용하면 된다.
+
+```js
+import styled from "styled-components";
+
+const Title = styled.h1`
+  color: ${(props) => props.theme.textColor};
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  justify-content: center;
+  align-items: center;
+  background-color: ${(props) => props.theme.backgroundColor};
+`;
+
+function App() {
+  return (
+    <Wrapper>
+      <Title>Hello</Title>
+    </Wrapper>
+  );
+}
+
+export default App;
+```
