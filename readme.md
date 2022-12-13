@@ -129,3 +129,76 @@ function App() {
 
 export default App;
 ```
+
+<br />
+
+## 타입스크립트
+
+### 타입스크립트란 ?
+
+자바스크립트는 너무나 관대(?)해서 오냐오냐 하고 넘어갈 때가 많습니다.
+
+const sum = (a,b) => a+b; 에서 a와 b는 숫자로 받을 생각이었지만, 여기에 문자열을 넘기면 그대로 적용이 됩니다. 또한 존재하지 않는 프로퍼티를 읽어 undefined를 출력하기도 합니다.
+
+그래서 좀더 깐깐한 언어인 타입스크립트를 통해 적용 할 수 있습니다. 타입스크립트는 자바스크립트를 바탕으로 하여 거의 유사하지만 좀 더 강력한 기능을 제공한다.
+
+### Type Annotation
+
+```js
+// Type Annotation
+const sum = (a: number, b: number) => a + b;
+sum(1, 2);
+```
+
+코드 타입을 정할때 : 를 이용해서 표현합니다.
+
+<br />
+
+### Props설정
+
+아래과 같이 `<Circle/>`컴포넌트에 프롭스가 필요하다 가정을 해보자
+
+```js
+/* App.tsx */
+
+import Circle from "./Circle";
+
+function App() {
+  return (
+    <>
+      <Circle bgColor="orange" />
+      <Circle bgColor="green" />
+    </>
+  );
+}
+
+export default App;
+```
+
+interface 키워드를 이용해 인터페이스를 만들어 줄 수 있습니다.
+이때 인터페이스 이름은 I를 붙이기도 합니다 (ex. 가격정보 → IPriceData)
+그럼 인터페이스를 만들어 보죠. <Circle/>에게 넘어오는 각 props의 타입은 CircleProps라고 알려줍시다.
+
+```js
+import styled from "styled-components";
+
+const Container = styled.div``;
+
+interface CircleProps {
+  bgColor: string;
+}
+
+function Circle({ bgColor }: CircleProps) {
+  return <Container />;
+}
+
+export default Circle;
+```
+
+<Circle/>이 넘겨받은 bgColor 란 props를 다시 자식 컴포넌트인 <Container/>에게 넘겨줄 차례입니다.
+
+스타일드 컴포넌트인 <Container/> 가 받을 props들도 설정해준 뒤, styled.div<{인터페이스명}>``; 형태로 사용합니다.
+
+추가적으로 이렇게 <> 형태로 사용하는 것을 제네릭(Generic)이라 하는데, 타입정의를 매개변수로 넘겨주는 것처럼 사용하고 있습니다.
+
+<br />
