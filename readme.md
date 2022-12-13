@@ -300,3 +300,57 @@ function Circle({ bgColor, borderColor, text = "Lorem Ipsum" }: CircleProps) {
 
 export default Circle;
 ```
+
+<br />
+
+### State
+
+타입스크립트를 사용하고 있다면 리액트의 state 초기값을 보고 알아서 타입을 유추해 줍니다.
+
+`const [value, setValue] = useState(true);` 라면 Boolean 값이 여기 들어오겠거니 알아챕니다
+
+만약 state값이 undefined나 null이 될 수 있는 등, 여러 타입이 올 수 있다면 따로 타입을 지정해 줄 수 있습니다.
+
+`const [value, setValue] = useState<number | null>(0);`
+
+<br />
+
+### form event
+
+onChange 는 Form Events 임을 알 수 있습니다.
+
+그리고 이벤트를 발생시킬 요소는 `<HTMLInputElement>`입니다.
+
+따라서 e 객체의 타입을 `React.FormEvent<HTMLInputElement>` 로 지정합니다.
+
+```js
+import React, { useState } from "react";
+
+function App() {
+  const [value, setValue] = useState("");
+  const onChange = (event: React.FormEvent<HTMLInputElement>) => {
+    const {
+      currentTarget: { value },
+    } = event;
+    setValue(value);
+  };
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log("hello", value);
+  };
+  return (
+    <div>
+      <form onSubmit={onSubmit}>
+        <input
+          value={value}
+          onChange={onChange}
+          type="text"
+          placeholder="username"
+        />
+        <button>Log in</button>
+      </form>
+    </div>
+  );
+}
+export default App;
+```
