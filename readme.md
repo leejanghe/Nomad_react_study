@@ -354,3 +354,67 @@ function App() {
 }
 export default App;
 ```
+
+<br />
+
+## Theme
+
+스타일드 컴포넌트를 위한 타입스크립트 정의는 declarations 파일을 통해 확장할 수 있습니다.
+styled.d.ts 란 이름으로 declarations 파일을 생성 후 아래 내용을 붙여넣습니다.
+(d.ts 파일은 선언(delcaration)을 통해 타입스크립트 코드의 타입 추론을 돕는 파일입니다.)
+스타일드 컴포넌트의 DefaultTheme 에게 인터페이스를 지정해주는 거죠.
+[참고문서](https://styled-components.com/docs/api#typescript)
+
+```js
+/* styled.d.ts */
+
+// import original module declarations
+import 'styled-components';
+
+// and extend them!
+declare module 'styled-components' {
+  export interface DefaultTheme {
+    textColor: string;
+	bgColor: string
+  }
+}
+```
+
+import { DefaultTheme } 으로 가져오고, 작성한 테마의 타입으로 지정해준 다음 export 합니다.
+
+```js
+/* theme.ts */
+
+import { DefaultTheme } from "styled-components";
+
+export const lightTheme: DefaultTheme = {
+  textColor: "#000",
+  bgColor: "#fff",
+};
+
+export const darkTheme: DefaultTheme = {
+  textColor: "#fff",
+  bgColor: "#000",
+};
+```
+
+테마를 적용할 컴포넌트를 <ThemeProvider/> 로 감싸고 theme={}로 지정해주면 되겠죠!
+
+```js
+/* index.tsx */
+
+//...
+import { ThemeProvider } from "styled-components";
+import { darkTheme } from "./theme";
+
+ReactDOM.render(
+  <React.StrictMode>
+    <ThemeProvider theme={darkTheme}>
+      <App />
+    </ThemeProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+```
+
+그러면 props.theme로 가져올 수 있게 되며, 어떤 속성을 어떤 타입으로 써야하는지 명확히 알 수 있습니다.
