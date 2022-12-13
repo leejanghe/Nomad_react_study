@@ -202,3 +202,101 @@ export default Circle;
 추가적으로 이렇게 <> 형태로 사용하는 것을 제네릭(Generic)이라 하는데, 타입정의를 매개변수로 넘겨주는 것처럼 사용하고 있습니다.
 
 <br />
+
+### Option Props
+
+bgColor는 꼭 필요한 Props인데, 그렇다면 반드시 필요하지 않은 Props는 어떻게 설정할까요?
+그냥 물음표를 붙이면 된다.
+
+```js
+interface CircleProps {
+  bgColor: string;
+  borderColor?: string;
+}
+```
+
+borderColor는 타입이 `string | undefined` 가 됩니다.
+
+이렇게 | 연산자를 이용해 타입을 여러 개 연결하는 방식을 유니온 타입이라고 부릅니다.
+
+해당 값은 `string` 또는 `undefined`니까 값이 `undefined`더라도 당황하지 말고 넘어가세요! 하고 타입스크립트에게 말해주는 거죠.
+
+우리는 지금 CircleProps와 ContainerProps 두 개가 있는데, CircleProps는 선택값으로 받되 ContainerProps에서는 필수값으로 받아봅시다.
+
+반드시 border값이 있어야 하긴 하는데, 그 값이 부모에서 넘어올 수도 있고 아닐 수도 있는 상황이란 거죠!
+
+```js
+interface CircleProps {
+  bgColor: string;
+  borderColor?: string;
+}
+
+interface ContainerProps {
+  bgColor: string;
+  borderColor: string;
+}
+```
+
+그래서 만약 부모(Circle)로부터 넘겨받은 값이 없다면 그냥 bgColor 값이 borderColor 값이 되도록 합니다.
+
+`borderColor={borderColor ?? bgColor}`
+
+- nullish 병합 연산자
+
+* `a ?? b에서 a 가 null또는 undefined라면 b, 아니라면 a`
+
+```js
+// ...
+const Container =
+  styled.div <
+  ContainerProps >
+  `
+  width: 300px;
+  height: 300px;
+  background-color: ${(props) => props.bgColor};
+  border: 3px solid ${(props) => props.borderColor};
+  border-radius: 50%;
+`;
+
+function Circle({ bgColor, borderColor }: CircleProps) {
+  return <Container bgColor={bgColor} borderColor={borderColor ?? bgColor} />;
+}
+```
+
+또는 { text = “Lorem Ipsum”} 과 같이 기본값을 설정해 줄 수도 있겠죠!
+
+```js
+/* Circle.tsx */
+
+import styled from "styled-components";
+interface CircleProps {
+  bgColor: string;
+  borderColor?: string;
+  text?: string;
+}
+interface ContainerProps {
+  bgColor: string;
+  borderColor: string;
+}
+
+const Container =
+  styled.div <
+  ContainerProps >
+  `
+  width: 300px;
+  height: 300px;
+  background-color: ${(props) => props.bgColor};
+  border: 3px solid ${(props) => props.borderColor};
+  border-radius: 50%;
+`;
+
+function Circle({ bgColor, borderColor, text = "Lorem Ipsum" }: CircleProps) {
+  return (
+    <Container bgColor={bgColor} borderColor={borderColor ?? bgColor}>
+      {text}
+    </Container>
+  );
+}
+
+export default Circle;
+```
